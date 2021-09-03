@@ -7,4 +7,18 @@ before_install:
   - docker build -t raneeshgomez/docker-react -f Dockerfile.dev .
 
 script:
+  # We set an environment variable CI=true to make the React test suite run in 
+  # continuous integration mode, where it will not watch for user input once the test suite has run
   - docker run -e CI=true raneeshgomez/docker-react npm run test
+
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker-react"
+  env: "Dockerreact-env"
+  bucket_name: "elasticbeanstalk-us-east-2-011320658505"
+  bucket_path: "docker-react"
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_KEY
