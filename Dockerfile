@@ -1,7 +1,6 @@
 # This is the Dockerfile for production environments
 
-# When there are multi-step build processes in a container, it is better to alias a build step with a name (using AS instruction)
-FROM node:lts-alpine AS builder
+FROM node:lts-alpine
 WORKDIR '/app'
 COPY package.json .
 RUN npm install
@@ -10,8 +9,8 @@ RUN npm run build
 
 FROM nginx
 EXPOSE 80
-# Copy the build dir from the "builder" step to the nginx dir
-COPY --from=builder /app/build /usr/share/nginx/html
+# Copy the build dir from the 0th build stage to the nginx dir
+COPY --from=0 /app/build /usr/share/nginx/html
 
 # Build with,
 # docker build .
