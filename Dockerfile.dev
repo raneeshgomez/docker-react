@@ -1,0 +1,26 @@
+FROM node:lts-alpine
+
+WORKDIR '/app'
+
+COPY package.json .
+RUN npm install
+
+COPY . .
+
+CMD ["npm", "run", "start"]
+
+# If running without docker-compose:
+
+# 1. Build the app with,
+# docker build -f Dockerfile.dev .
+
+# 2. Run the app with,
+# docker run -it -p 3000:3000 -v /app/node_modules -v $(pwd):/app 7c805231f655fd6d33014
+
+# NOTE:
+# The 2nd "-v" flag creates a volume (reference from the /app dir in the container to the present working dir in our local machine),
+# so that changes to the source code can be reflected on the app immediately.
+
+# NOTE:
+# The first "-v" flag bookmarks the node_modules folder in the container's app working dir so that it does not reference the 
+# node_modules folder in this working dir (which does not exist, and in turn will cause an error)
